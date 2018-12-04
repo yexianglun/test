@@ -2,7 +2,7 @@
 //1.寻找链表中点
 void find_middle(ListNode*head){	
 	ListNode*slow=head,*cur=head,*fast=head;	
-	while(fast&&fast->next){		
+	while(fast->next&&fast->next){		
 		cur=slow;		
 		slow=slow->next;		
 		fast=fast->next->next;		
@@ -65,4 +65,113 @@ class Solution{
 			return dummy->next;
 		} 		
 };
+
+//链表移动
+//1-2-3-4-5    向右移动2位   则第一次：  5-1-2-3-4  第二次  4-5-1-2-3
+class Solution{
+	public:
+		ListNode*rorateRight(ListNode*head,int k){
+			//找出链表的深度
+			int n=0;
+			ListNode*cur=head;
+			while(cur){
+				n++;
+				cur=cur->next;
+			}
+			k%=n;
+			//设计快慢指针,让快指针先走k步后快慢指针再一起走
+			ListNode*slow=head,*fast=head;
+			for(int i=0;i<k;i++){
+				if(fast)fast=fast->next;
+			}
+			if(!fast)return head;
+			//再一起走
+			while(fast->next){
+				fast=fast->next;
+				slow=slow->next;
+			}
+			fast->next=head;
+			fast=slow->next;
+			slow->next=NULL;
+		}
+		return fast;
+};
+//删除链表的节点
+class Solution{
+	public:
+		ListNode*deleNode(ListNode*head,int val){
+			ListNode*dummy=new ListNode(-1);
+			ListNode*cur=dummy;
+			dummy->next=head;
+			while(cur->next){
+				if(cur->next->val==val){
+					ListNode*tmp=cur->next;
+					cur->next=tmp->next;
+					tmp->next=NULL;
+					delete tmp;
+				}else{
+					cur=cur->next;
+				}
+			}
+			return dummy->next;
+		}
+};
+//删除重复元素  1-1-2-3-4-4  1-2-3-4
+class Solution{
+	public:
+		ListNode* deleteDuplicates(ListNode* head) {
+			ListNode*dummy=new ListNode(-1);
+			dummy->next=head;
+			ListNode*cur=dummy;
+			while(cur->next&&cur->next->next){
+				if(cur->next->val==cur->next->next->val){
+					ListNode*tmp=cur->next;
+					cur->next=tmp->next;
+					tmp->next=NULL;
+					delete tmp;
+				}else{
+					cur=cur->next;
+				}
+			}return dummy->next;
+		}
+};
+//环形链表
+//快慢指针的经典应用
+class Solution{
+	public:
+		bool hasCycle(ListNode*head){
+			ListNode*slow=head,*fast=head;
+			while(fast&&fast->next){
+				fast=fast->next->next;
+				slow=slow->next;
+				if(fast==slow)return true;
+			}
+			return false;
+		}
+};
+//判断对称链表
+bool isPalindrome(ListNode*head){
+	if(!head||!head->next)return true;
+	ListNode* slow=head,*fast=head,*cur=head;
+	while(fast->next&&fast->next->next){
+		cur=slow;
+		slow=slow->next;
+		fast=fast->next->next;
+	}
+	ListNode*pre=head,*last=slow->next;
+	while(last->next){		
+			
+		ListNode*tmp=last->next;
+		last->next=tmp->next;
+		tmp->next=slow->next;
+		slow->next=tmp;		
+	}
+	while(slow->next){
+		slow=slow->next;
+		if(slow->val!=pre->val)return false;
+		pre=pre->next;
+	}
+	return true;
+};
+
 
