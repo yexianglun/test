@@ -1,5 +1,6 @@
 //链表操作
 //1.寻找链表中点
+```c++
 void find_middle(ListNode*head){
 	ListNode*slow=head,*cur=head,*fast=head;
 	while(fast&&fast->next){
